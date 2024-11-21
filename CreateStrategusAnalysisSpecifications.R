@@ -26,7 +26,7 @@ tcis <- list(
   #standard analyses that would be performed during routine signal detection
   list(
     targetId = 19020, # New users of GPLT-1
-    comparatorId = 19020, # New users of DPP-4
+    comparatorId = 19021, # New users of DPP-4
     indicationId = 19022, # Type 2 diabetes
     genderConceptIds = c(8507, 8532), # use valid genders (remove unknown)
     minAge = NULL, # All ages In years. Can be NULL
