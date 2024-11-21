@@ -1,12 +1,7 @@
 ################################################################################
 # INSTRUCTIONS: Make sure you have downloaded your cohorts using 
-# DownloadCohorts.R and that those cohorts are stored in the "inst" folder
-# of the project. This script is written to use the sample study cohorts
-# located in "inst/sampleStudy" so you will need to modify this in the code 
-# below. 
-# 
-# See the Create analysis specifications section
-# of the UsingThisTemplate.md for more details.
+# DownloadAssets.R and that those cohorts are stored in the "inst" folder
+# of the project. 
 # 
 # More information about Strategus HADES modules can be found at:
 # https://ohdsi.github.io/Strategus/reference/index.html#omop-cdm-hades-modules.
@@ -22,32 +17,31 @@ library(Strategus)
 
 # Get the list of cohorts - NOTE: you should modify this for your
 # study to retrieve the cohorts you downloaded as part of
-# DownloadCohorts.R
-cohortDefinitionSet <- CohortGenerator::getCohortDefinitionSet(
-  settingsFileName = "inst/sampleStudy/Cohorts.csv",
-  jsonFolder = "inst/sampleStudy/cohorts",
-  sqlFolder = "inst/sampleStudy/sql/sql_server"
-)
+# DownloadAssets.R
+negativeControlOutcomeCohortSet <- CohortGenerator::readCsv("inst/negativeControlOutcomes.csv")
+excludedCovariateConcepts <- CohortGenerator::readCsv("inst/excludedCovariateConcepts.csv")
+cohortDefinitionSet <- readr::read_csv("inst/Cohorts.csv", show_col_types = FALSE)
 
 tcis <- list(
   #standard analyses that would be performed during routine signal detection
   list(
-    targetId = 1, # New users of celecoxib
-    comparatorId = 2, # New users of diclofenac
-    indicationId = NULL, 
+    targetId = 19020, # New users of GPLT-1
+    comparatorId = 19020, # New users of DPP-4
+    indicationId = 19022, # Type 2 diabetes
     genderConceptIds = c(8507, 8532), # use valid genders (remove unknown)
     minAge = NULL, # All ages In years. Can be NULL
     maxAge = NULL, # All ages In years. Can be NULL
-    excludedCovariateConceptIds = c(
-      1118084, 
-      1124300
-    ) 
+    excludedCovariateConceptIds = excludedCovariateConcepts$conceptId
   )
 )
 
 outcomes <- tibble(
-  cohortId = c(3), # GI Bleed
-  cleanWindow = c(365)
+  cohortId = c(19023, # Acute myocardial infarction inpatient setting
+               19024, # Acute myocardial infarction any setting
+               19059), # Diarrhea
+  cleanWindow = c(365,
+                  365,
+                  365)
 )
 
 # Time-at-risks (TARs) for the outcomes of interest in your study
@@ -75,15 +69,10 @@ plpTimeAtRisks <- tibble(
 )
 # If you are not restricting your study to a specific time window, 
 # please make these strings empty
-studyStartDate <- '20171201' #YYYYMMDD
-studyEndDate <- '20231231'   #YYYYMMDD
-# Some of the settings require study dates with hyphens
-studyStartDateWithHyphens <- gsub("(\\d{4})(\\d{2})(\\d{2})", "\\1-\\2-\\3", studyStartDate)
-studyEndDateWithHyphens <- gsub("(\\d{4})(\\d{2})(\\d{2})", "\\1-\\2-\\3", studyEndDate)
-
+studyStartDate <- "20171201" #YYYYMMDD
+studyEndDate <- "20231231"   #YYYYMMDD
 
 # Consider these settings for estimation  ----------------------------------------
-
 useCleanWindowForPriorOutcomeLookback <- FALSE # If FALSE, lookback window is all time prior, i.e., including only first events
 psMatchMaxRatio <- 1 # If bigger than 1, the outcome model will be conditioned on the matched set
 
@@ -189,10 +178,6 @@ for (i in 1:nrow(dfUniqueSubsetCriteria)) {
   }  
 }
 
-negativeControlOutcomeCohortSet <- CohortGenerator::readCsv(
-  file = "inst/sampleStudy/negativeControlOutcomes.csv"
-)
-
 if (any(duplicated(cohortDefinitionSet$cohortId, negativeControlOutcomeCohortSet$cohortId))) {
   stop("*** Error: duplicate cohort IDs found ***")
 }
@@ -235,6 +220,7 @@ characterizationModuleSpecifications <- cModuleSettingsCreator$createModuleSpeci
   targetIds = allCohortIdsExceptOutcomes,
   outcomeIds = outcomes$cohortId,
   minPriorObservation = 365,
+  outcomeWashoutDays = rep(365, nrow(outcomes)),
   dechallengeStopInterval = 30,
   dechallengeEvaluationWindow = 30,
   riskWindowStart = timeAtRisks$riskWindowStart, 
@@ -287,16 +273,18 @@ analysis1 <- CohortIncidence::createIncidenceAnalysis(
   outcomes = seq_len(nrow(outcomes)),
   tars = seq_along(tars)
 )
-# irStudyWindow <- CohortIncidence::createDateRange(
-#   startDate = studyStartDateWithHyphens,
-#   endDate = studyEndDateWithHyphens
-# )
+studyStartDateWithHyphens <- gsub("(\\d{4})(\\d{2})(\\d{2})", "\\1-\\2-\\3", studyStartDate)
+studyEndDateWithHyphens <- gsub("(\\d{4})(\\d{2})(\\d{2})", "\\1-\\2-\\3", studyEndDate)
+irStudyWindow <- CohortIncidence::createDateRange(
+  startDate = studyStartDateWithHyphens,
+  endDate = studyEndDateWithHyphens
+)
 irDesign <- CohortIncidence::createIncidenceDesign(
   targetDefs = targetList,
   outcomeDefs = outcomeList,
   tars = tars,
   analysisList = list(analysis1),
-  #studyWindow = irStudyWindow,
+  studyWindow = irStudyWindow,
   strataSettings = CohortIncidence::createStrataSettings(
     byYear = TRUE,
     byGender = TRUE,
