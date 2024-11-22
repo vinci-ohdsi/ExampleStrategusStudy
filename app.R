@@ -17,7 +17,7 @@ library(OhdsiShinyModules)
 # Settings ---------------------------------------------------------------------
 resultsConnectionDetails <- DatabaseConnector::createConnectionDetails(
   dbms = "sqlite",
-  server = "E:/GLP1DiliResults/Results.sqlite"
+  server = "E:/exampleStrategusStudy/Results.sqlite"
 )
 resultsDatabaseSchema <- "main"
 
