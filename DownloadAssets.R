@@ -17,7 +17,7 @@ ROhdsiWebApi::authorizeWebApi(
 cohortDefinitionSet <- ROhdsiWebApi::exportCohortDefinitionSet(
   baseUrl = baseUrl,
   cohortIds = c(
-    19020, # GLP-1
+    19137, # GLP-1
     19021, # DPP-4
     19022, # Type 2 diabetes
     19023, # Acute myocardial infarction inpatient setting
@@ -39,13 +39,8 @@ covariatesToExcludeConceptSet <- ROhdsiWebApi::getConceptSetDefinition(
   ) %>%
   ROhdsiWebApi::getConcepts(
     baseUrl = baseUrl
-  ) # %>%
-#   rename(outcomeConceptId = "conceptId",
-#          cohortName = "conceptName") %>%
-#   mutate(cohortId = row_number() + 100) %>%
-#   select(cohortId, cohortName, outcomeConceptId)
+  ) 
 
-# NOTE: Update file location for your study.
 CohortGenerator::writeCsv(
   x = covariatesToExcludeConceptSet,
   file = "inst/excludedCovariateConcepts.csv",
@@ -54,7 +49,7 @@ CohortGenerator::writeCsv(
 
 # Download and save the negative control outcomes
 negativeControlOutcomeCohortSet <- ROhdsiWebApi::getConceptSetDefinition(
-  conceptSetId = 437,
+  conceptSetId = 9025,
   baseUrl = baseUrl
 ) %>%
   ROhdsiWebApi::resolveConceptSet(
@@ -68,7 +63,6 @@ negativeControlOutcomeCohortSet <- ROhdsiWebApi::getConceptSetDefinition(
   mutate(cohortId = row_number() + 10000) %>%
   select(cohortId, cohortName, outcomeConceptId)
 
-# NOTE: Update file location for your study.
 CohortGenerator::writeCsv(
   x = negativeControlOutcomeCohortSet,
   file = "inst/negativeControlOutcomes.csv",

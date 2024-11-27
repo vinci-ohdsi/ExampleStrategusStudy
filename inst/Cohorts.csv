@@ -1,5 +1,5 @@
 atlasId,cohortId,cohortName,sql,json,logicDescription,generateStats
-19020,19020,[OHDSItutorial] GLP1RA exposures,"CREATE TABLE #Codesets (
+19137,19137,[OHDSItutorial] GLP1RA exposures 60-day eras,"CREATE TABLE #Codesets (
   codeset_id int NOT NULL,
   concept_id bigint NOT NULL
 )
@@ -119,7 +119,7 @@ JOIN
     JOIN 
     (
       --cteEndDates
-      select PERSON_ID, DATEADD(day,-1 * 30,EVENT_DATE) as END_DATE -- unpad the end date by 30
+      select PERSON_ID, DATEADD(day,-1 * 60,EVENT_DATE) as END_DATE -- unpad the end date by 60
       FROM
       (
 				select PERSON_ID, EVENT_DATE, EVENT_TYPE, 
@@ -133,8 +133,8 @@ JOIN
 
 					UNION ALL
 
-					-- add the end dates with NULL as the row number, padding the end dates by 30 to allow a grace period for overlapping ranges.
-					select PERSON_ID, DATEADD(day,30,DRUG_EXPOSURE_END_DATE), 1 as EVENT_TYPE, NULL
+					-- add the end dates with NULL as the row number, padding the end dates by 60 to allow a grace period for overlapping ranges.
+					select PERSON_ID, DATEADD(day,60,DRUG_EXPOSURE_END_DATE), 1 as EVENT_TYPE, NULL
 					FROM #drugTarget D
 				) RAWDATA
       ) E
@@ -392,7 +392,7 @@ DROP TABLE #Codesets;
 	""EndStrategy"" : {
 		""CustomEra"" : {
 			""DrugCodesetId"" : 1,
-			""GapDays"" : 30,
+			""GapDays"" : 60,
 			""Offset"" : 0
 		}
 	},

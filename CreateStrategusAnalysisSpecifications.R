@@ -25,7 +25,7 @@ cohortDefinitionSet <- readr::read_csv("inst/Cohorts.csv", show_col_types = FALS
 tcis <- list(
   #standard analyses that would be performed during routine signal detection
   list(
-    targetId = 19020, # New users of GPLT-1
+    targetId = 19137, # New users of GPLT-1
     comparatorId = 19021, # New users of DPP-4
     indicationId = 19022, # Type 2 diabetes
     genderConceptIds = c(8507, 8532), # use valid genders (remove unknown)
@@ -75,6 +75,7 @@ studyEndDate <- "20231231"   #YYYYMMDD
 # Consider these settings for estimation  ----------------------------------------
 useCleanWindowForPriorOutcomeLookback <- FALSE # If FALSE, lookback window is all time prior, i.e., including only first events
 psMatchMaxRatio <- 1 # If bigger than 1, the outcome model will be conditioned on the matched set
+sccsMaxCasesPerOutcome <- 100000 
 
 ########################################################
 # Below the line - DO NOT MODIFY -----------------------
@@ -502,7 +503,7 @@ analysisToInclude <- data.frame()
 for (i in seq_len(nrow(uniqueTargetIndications))) {
   targetIndication <- uniqueTargetIndications[i, ]
   getDbSccsDataArgs <- SelfControlledCaseSeries::createGetDbSccsDataArgs(
-    maxCasesPerOutcome = 1000000,
+    maxCasesPerOutcome = sccsMaxCasesPerOutcome,
     useNestingCohort = !is.na(targetIndication$indicationId),
     nestingCohortId = targetIndication$indicationId,
     studyStartDate = studyStartDate,
@@ -532,11 +533,11 @@ for (i in seq_len(nrow(uniqueTargetIndications))) {
     allowRegularization = TRUE,
     computeConfidenceIntervals = FALSE
   )
-  # seasonalitySettings <- SelfControlledCaseSeries::createSeasonalityCovariateSettings(
-  #   seasonKnots = 5,
-  #   allowRegularization = TRUE,
-  #   computeConfidenceIntervals = FALSE
-  # )
+  seasonalitySettings <- SelfControlledCaseSeries::createSeasonalityCovariateSettings(
+    seasonKnots = 5,
+    allowRegularization = TRUE,
+    computeConfidenceIntervals = FALSE
+  )
   fitSccsModelArgs <- SelfControlledCaseSeries::createFitSccsModelArgs(
     prior = Cyclops::createPrior("laplace", useCrossValidation = TRUE),
     control = Cyclops::createControl(
@@ -562,7 +563,7 @@ for (i in seq_len(nrow(uniqueTargetIndications))) {
     )
     createSccsIntervalDataArgs <- SelfControlledCaseSeries::createCreateSccsIntervalDataArgs(
       eraCovariateSettings = list(covarPreExp, covarExposureOfInt),
-      # seasonalityCovariateSettings = seasonalitySettings,
+      seasonalityCovariateSettings = seasonalitySettings,
       calendarTimeCovariateSettings = calendarTimeSettings
     )
     description <- "SCCS"
