@@ -33,15 +33,15 @@ shinyConfig <- initializeModuleConfig() |>
   addModuleConfig(
     createDefaultCohortGeneratorConfig()
   ) |>
-  # addModuleConfig(
-  #   createDefaultCohortDiagnosticsConfig()
-  # ) |>
+  addModuleConfig(
+    createDefaultCohortDiagnosticsConfig()
+  ) |>
   addModuleConfig(
     createDefaultCharacterizationConfig()
   ) |>
-  # addModuleConfig(
-  #   createDefaultPredictionConfig()
-  # ) |>
+  addModuleConfig(
+    createDefaultPredictionConfig()
+  ) |>
   addModuleConfig(
     createDefaultEstimationConfig()
   ) 
