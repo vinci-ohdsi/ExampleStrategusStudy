@@ -14,6 +14,15 @@
 library(ShinyAppBuilder)
 library(OhdsiShinyModules)
 
+# Settings ---------------------------------------------------------------------
+resultsConnectionDetails <- DatabaseConnector::createConnectionDetails(
+  dbms = "sqlite",
+  server = "E:/exampleStrategusStudy/Results.sqlite"
+)
+resultsDatabaseSchema <- "main"
+
+
+# Don't make changes below this line -------------------------------------------
 shinyConfig <- initializeModuleConfig() |>
   addModuleConfig(
     createDefaultAboutConfig()
@@ -37,21 +46,10 @@ shinyConfig <- initializeModuleConfig() |>
     createDefaultEstimationConfig()
   ) 
 
-cli::cli_h1("Starting shiny server")
-serverStr <- paste0(Sys.getenv("shinydbServer"), "/", Sys.getenv("shinydbDatabase"))
-cli::cli_alert_info("Connecting to {serverStr}")
-connectionDetails <- DatabaseConnector::createConnectionDetails(
-  dbms = "postgresql",
-  server = serverStr,
-  port = Sys.getenv("shinydbPort"),
-  user = "shinyproxy",
-  password = Sys.getenv("shinydbPw")
-)
-
-cli::cli_h2("Loading schema")
+# now create the shiny app based on the config file and view the results
+# based on the connection 
 ShinyAppBuilder::createShinyApp(
-   config = shinyConfig,
-   connectionDetails = connectionDetails,
-   resultDatabaseSettings = createDefaultResultDatabaseSettings(schema = "strategus_tutorial"),
-   title = "Population-level Estimation Tutorial with Strategus"
+  config = shinyConfig, 
+  connectionDetails = resultsConnectionDetails,
+  resultDatabaseSettings = createDefaultResultDatabaseSettings(schema = resultsDatabaseSchema)
 )
