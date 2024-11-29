@@ -1,12 +1,14 @@
 name: build-and-push-ohdsi-docker-image-to-Docker-Hub
 
-on:
-  release:
-    types: [published]
-  workflow_dispatch:
+# on:
+#   release:
+#     types: [published]
+#   workflow_dispatch:
+
+on: [push]
 
 env:
-  APP_NAME: Glp1DiliApp # the Shiny application name in the OHDSI ShinyProxyDeploy gitHub repo application.yml file
+  APP_NAME: EstimationTutorial # the Shiny application name in the OHDSI ShinyProxyDeploy gitHub repo application.yml file
   DOCKER_IMAGE: ohdsi/estimationtutorial
   MAINTAINER: Marc Suchard <msuchard@ucla.edu>
   AUTHOR: Marc Suchard <msuchard@ucla.edu>
