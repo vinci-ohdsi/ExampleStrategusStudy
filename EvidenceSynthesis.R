@@ -19,6 +19,9 @@ resultsDatabaseConnectionDetails <- DatabaseConnector::createConnectionDetails(
 )
 resultsDatabaseSchema <- "main"
 
+outputLocation <- "e:/exampleStrategusStudy" # Where the intermediate and output files will be written
+
+
 esModuleSettingsCreator = EvidenceSynthesisModule$new()
 evidenceSynthesisSourceCm <- esModuleSettingsCreator$createEvidenceSynthesisSource(
   sourceMethod = "CohortMethod",
@@ -54,8 +57,8 @@ ParallelLogger::saveSettingsToJson(
 
 resultsExecutionSettings <- Strategus::createResultsExecutionSettings(
   resultsDatabaseSchema = resultsDatabaseSchema,
-  resultsFolder = file.path("results", "evidence_sythesis", "strategusOutput"),
-  workFolder = file.path("results", "evidence_sythesis", "strategusWork")
+  resultsFolder = file.path(outputLocation, "evidence_sythesis", "strategusOutput"),
+  workFolder = file.path(outputLocation, "evidence_sythesis", "strategusWork")
 )
 
 Strategus::execute(
