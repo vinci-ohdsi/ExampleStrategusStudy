@@ -10,15 +10,11 @@
 # ##############################################################################
 
 # Settings ---------------------------------------------------------------------
-# Use the connnection  details to connect to either the Postgres or SQLite database:
-resultsDatabaseConnectionDetails <- DatabaseConnector::createConnectionDetails(
-  dbms = "sqlite",
-  server = "E:/exampleStrategusStudy/Results.sqlite"
-)
-resultsDatabaseSchema <- "main"
+source("scriptsForStudyCoordinator/SetConnectionDetails.R")
+
 # Need at least one results folder to know what table structure to create. 
 # resultsFolder should at least contain a 'strategusOutput' subfolder:
-resultsFolder <- list.dirs(path = "E:/exampleStrategusStudy", full.names = T, recursive = F)[1]
+resultsFolder <- "/Users/schuemie/Data/ExampleStrategusStudy"#list.dirs(path = "/Users/schuemie/Data/ExampleStrategusStudy", full.names = T, recursive = F)[1]
 
 
 # Don't make changes below this line -------------------------------------------
@@ -32,5 +28,5 @@ resultsDataModelSettings <- Strategus::createResultsDataModelSettings(
 Strategus::createResultDataModel(
   analysisSpecifications = analysisSpecifications,
   resultsDataModelSettings = resultsDataModelSettings,
-  resultsConnectionDetails = resultsDatabaseConnectionDetails
+  resultsConnectionDetails = resultsConnectionDetails
 )

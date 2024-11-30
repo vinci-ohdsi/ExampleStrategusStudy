@@ -15,11 +15,8 @@ library(ShinyAppBuilder)
 library(OhdsiShinyModules)
 
 # Settings ---------------------------------------------------------------------
-resultsConnectionDetails <- DatabaseConnector::createConnectionDetails(
-  dbms = "sqlite",
-  server = "E:/exampleStrategusStudy/Results.sqlite"
-)
-resultsDatabaseSchema <- "main"
+source("scriptsForStudyCoordinator/SetConnectionDetails.R")
+
 
 
 # Don't make changes below this line -------------------------------------------

@@ -13,13 +13,10 @@
 library(dplyr)
 library(Strategus)
 
-resultsDatabaseConnectionDetails <- DatabaseConnector::createConnectionDetails(
-  dbms = "sqlite",
-  server = "E:/exampleStrategusStudy/Results.sqlite"
-)
-resultsDatabaseSchema <- "main"
+source("scriptsForStudyCoordinator/SetConnectionDetails.R")
 
-outputLocation <- "e:/exampleStrategusStudy" # Where the intermediate and output files will be written
+
+outputLocation <- "scriptsForStudyCoordinator" # Where the intermediate and output files will be written
 
 
 esModuleSettingsCreator = EvidenceSynthesisModule$new()
@@ -57,8 +54,8 @@ ParallelLogger::saveSettingsToJson(
 
 resultsExecutionSettings <- Strategus::createResultsExecutionSettings(
   resultsDatabaseSchema = resultsDatabaseSchema,
-  resultsFolder = file.path(outputLocation, "evidence_sythesis", "strategusOutput"),
-  workFolder = file.path(outputLocation, "evidence_sythesis", "strategusWork")
+  resultsFolder = file.path(outputLocation, "evidenceSynthesis", "strategusOutput"),
+  workFolder = file.path(outputLocation, "evidenceSynthesis", "strategusWork")
 )
 
 Strategus::execute(

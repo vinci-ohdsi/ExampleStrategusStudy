@@ -19,15 +19,9 @@
 # ##############################################################################
 
 # Settings ---------------------------------------------------------------------
-# Use the connnection  details to connect to either the Postgres or SQLite database:
-resultsDatabaseConnectionDetails <- DatabaseConnector::createConnectionDetails(
-  dbms = "sqlite",
-  server = "E:/exampleStrategusStudy/Results.sqlite"
-)
-resultsDatabaseSchema <- "main"
-# The list of all results folders (one per database on which the script was executed)
-# Each results folder should at least contain a 'strategusOutput' subfolder:
-resultsFolders <- list.dirs(path = "E:/exampleStrategusStudy", full.names = T, recursive = F)[1]
+source("scriptsForStudyCoordinator/SetConnectionDetails.R")
+
+resultsFiles <- list.files(path = "/Users/schuemie/Data/ExampleStrategusStudy", pattern = ".zip", full.names = T, recursive = F)
 
 
 # Don't make changes below this line -------------------------------------------
@@ -47,61 +41,21 @@ ParallelLogger::addDefaultErrorReportLogger(
 )
 
 # Upload Results ---------------------------------------------------------------
-for (resultFolder in resultsFolders) {
+for (resultsFile in resultsFiles) {
+  tempFolder <- tempfile("StrategusResults")
+  dir.create(tempFolder)
+  unzip(resultsFile, exdir = tempFolder)
   resultsDataModelSettings <- Strategus::createResultsDataModelSettings(
     resultsDatabaseSchema = resultsDatabaseSchema,
-    resultsFolder = file.path(resultFolder, "strategusOutput"),
+    resultsFolder = tempFolder,
   )
   
   Strategus::uploadResults(
     analysisSpecifications = analysisSpecifications,
     resultsDataModelSettings = resultsDataModelSettings,
-    resultsConnectionDetails = resultsDatabaseConnectionDetails
+    resultsConnectionDetails = resultsConnectionDetails
   )
 }
-
-# Optional scripts to set permissions and to analyze tables ------------------
-# connection <- DatabaseConnector::connect(
-#   connectionDetails = resultsDatabaseConnectionDetails
-# )
-# 
-# # Grant read only permissions to all tables
-# sql <- "GRANT USAGE ON SCHEMA @schema TO @results_user;
-# GRANT SELECT ON ALL TABLES IN SCHEMA @schema TO @results_user; 
-# GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA @schema TO @results_user;"
-# 
-# message("Setting permissions for results schema")
-# sql <- SqlRender::render(
-#   sql = sql, 
-#   schema = resultsDatabaseSchema,
-#   results_user = 'shinyproxy'
-# )
-# DatabaseConnector::executeSql(
-#   connection = connection, 
-#   sql = sql,
-#   progressBar = FALSE,
-#   reportOverallTime = FALSE
-# )
-#   
-# # Analyze all tables in the results schema
-# message("Analyzing all tables in results schema")
-# sql <- "ANALYZE @schema.@table_name;"
-# tableList <- DatabaseConnector::getTableNames(
-#   connection = connection,
-#   databaseSchema = resultsDatabaseSchema
-# )
-# for (i in 1:length(tableList)) {
-#   DatabaseConnector::renderTranslateExecuteSql(
-#     connection = connection,
-#     sql = sql,
-#     schema = resultsDatabaseSchema,
-#     table_name = tableList[i],
-#     progressBar = FALSE,
-#     reportOverallTime = FALSE
-#   )
-# }
-# 
-# DatabaseConnector::disconnect(connection)
 
 # Unregister loggers -----------------------------------------------------------
 ParallelLogger::unregisterLogger("RESULTS_FILE_LOGGER")
