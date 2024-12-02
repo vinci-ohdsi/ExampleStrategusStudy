@@ -1,6 +1,6 @@
 ##=========== START OF INPUTS ==========
-outputLocation <- 'D:/git/ohdsi-studies/SemaglutideNaion'
-databaseName <- "MDCD"
+outputLocation <- "e:/exampleStrategusStudy"
+databaseName <- "CCAE"
 # For uploading the results. You should have received the key file from the study coordinator:
 keyFileName <- "[location where you are storing: e.g. ~/keys/study-data-site-covid19.dat]"
 userName <- "[user name provided by the study coordinator: eg: study-data-site-covid19]"

@@ -9,11 +9,13 @@
 library(dplyr)
 # baseUrl <- "https://atlas-demo.ohdsi.org/WebAPI"
 baseUrl <- Sys.getenv("baseUrl")
-# Use this if your WebAPI instance has security enables
+# Use this if your WebAPI instance has security enabled
 ROhdsiWebApi::authorizeWebApi(
   baseUrl = baseUrl,
   authMethod = "windows"
 )
+
+# Download and save the cohort definitions ---------------------------------------------------------
 cohortDefinitionSet <- ROhdsiWebApi::exportCohortDefinitionSet(
   baseUrl = baseUrl,
   cohortIds = c(
@@ -29,7 +31,7 @@ cohortDefinitionSet <- ROhdsiWebApi::exportCohortDefinitionSet(
 readr::write_csv(cohortDefinitionSet, "inst/Cohorts.csv")
 
 
-# Download and save the covariates to exclude
+# Download and save the covariates to exclude ------------------------------------------------------
 covariatesToExcludeConceptSet <- ROhdsiWebApi::getConceptSetDefinition(
   conceptSetId = 436,
   baseUrl = baseUrl
@@ -47,7 +49,8 @@ CohortGenerator::writeCsv(
   warnOnFileNameCaseMismatch = F
 )
 
-# Download and save the negative control outcomes
+
+# Download and save the negative control outcomes --------------------------------------------------
 negativeControlOutcomeCohortSet <- ROhdsiWebApi::getConceptSetDefinition(
   conceptSetId = 9025,
   baseUrl = baseUrl

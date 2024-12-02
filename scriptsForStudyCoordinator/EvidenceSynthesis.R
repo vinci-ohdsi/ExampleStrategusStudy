@@ -8,6 +8,9 @@
 # esModuleSettingsCreator$createEvidenceSynthesisSource() function. If your 
 # study is not using CohortMethod and/or SelfControlledCaseSeries you should
 # remove that from the evidenceSynthesisAnalysisList.
+#
+# Make sure you have set the connection details to your results database in
+# scriptsForStudyCoordinator/SetConnectionDetails.R.
 # ##############################################################################
 
 library(dplyr)
@@ -15,9 +18,7 @@ library(Strategus)
 
 source("scriptsForStudyCoordinator/SetConnectionDetails.R")
 
-
 outputLocation <- "scriptsForStudyCoordinator" # Where the intermediate and output files will be written
-
 
 esModuleSettingsCreator = EvidenceSynthesisModule$new()
 evidenceSynthesisSourceCm <- esModuleSettingsCreator$createEvidenceSynthesisSource(
@@ -50,7 +51,6 @@ esAnalysisSpecifications <- Strategus::createEmptyAnalysisSpecificiations() |>
 ParallelLogger::saveSettingsToJson(
   esAnalysisSpecifications, 
   file.path("inst/esAnalysisSpecification.json"))
-
 
 resultsExecutionSettings <- Strategus::createResultsExecutionSettings(
   resultsDatabaseSchema = resultsDatabaseSchema,

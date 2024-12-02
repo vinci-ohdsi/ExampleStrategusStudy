@@ -3,23 +3,15 @@
 # or SQLite database per the UploadResults.R script.This script will launch a 
 # Shiny results viewer to analyze results from the study.
 #
-# See the Working with results section
-# of the UsingThisTemplate.md for more details.
-# 
-# More information about working with results produced by running Glp1Dili 
-# is found at:
-# https://ohdsi.github.io/Glp1Dili/articles/WorkingWithResults.html
+# Make sure you have set the connection details to your results database in
+# scriptsForStudyCoordinator/SetConnectionDetails.R.
 # ##############################################################################
 
 library(ShinyAppBuilder)
 library(OhdsiShinyModules)
 
-# Settings ---------------------------------------------------------------------
 source("scriptsForStudyCoordinator/SetConnectionDetails.R")
 
-
-
-# Don't make changes below this line -------------------------------------------
 shinyConfig <- initializeModuleConfig() |>
   addModuleConfig(
     createDefaultAboutConfig()

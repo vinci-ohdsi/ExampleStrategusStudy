@@ -2,7 +2,6 @@
 
 source("scriptsForStudyCoordinator/SetConnectionDetails.R")
 
-
 connection <- DatabaseConnector::connect(
   connectionDetails = resultsConnectionDetails
 )

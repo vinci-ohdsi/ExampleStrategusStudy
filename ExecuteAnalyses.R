@@ -12,12 +12,12 @@
 # -------------------------------------------------------
 #renv::restore()
 
-# ENVIRONMENT SETTINGS NEEDED FOR RUNNING Glp1Dili ------------
+# ENVIRONMENT SETTINGS NEEDED FOR RUNNING STUDY ------------
 Sys.setenv("_JAVA_OPTIONS"="-Xmx4g") # Sets the Java maximum heap space to 4GB
 Sys.setenv("VROOM_THREADS"=1) # Sets the number of threads to 1 to avoid deadlocks on file system
-options(andromedaTempFolder = "e:/andromedaTemp") # Where temp Andromeda files will be written
 
 ##=========== START OF INPUTS ==========
+options(andromedaTempFolder = "e:/andromedaTemp") # Where temp Andromeda files will be written
 options(sqlRenderTempEmulationSchema = "scratch.scratch_mschuemi") # For database platforms that don't support temp tables
 cdmDatabaseSchema <- "merative_ccae.cdm_merative_ccae_v3046" # The database / schema where the data in CDM format live
 workDatabaseSchema <- "scratch.scratch_mschuemi" # A database /schema where study tables can be written
@@ -25,7 +25,6 @@ cohortTableName <- "example_strategus_study_ccae" # Where the cohorts will be wr
 outputLocation <- "e:/exampleStrategusStudy" # Where the intermediate and output files will be written
 databaseName <- "CCAE" # Only used as a folder name for results from the study
 minCellCount <- 5 # Minimum cell count for inclusion in output tables
-
 
 # Create the connection details for your CDM
 # More details on how to do this are found here:
@@ -37,12 +36,16 @@ connectionDetails <- DatabaseConnector::createConnectionDetails(
   password = keyring::key_get("databricksToken")
 )
 
-
 # You can use this snippet to test your connection
 #conn <- DatabaseConnector::connect(connectionDetails)
 #DatabaseConnector::disconnect(conn)
 
 ##=========== END OF INPUTS ==========
+
+##################################
+# DO NOT MODIFY BELOW THIS POINT
+##################################
+
 analysisSpecifications <- ParallelLogger::loadSettingsFromJson(
   fileName = "inst/studyAnalysisSpecification.json"
 )

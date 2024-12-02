@@ -1,7 +1,11 @@
 ################################################################################
-# INSTRUCTIONS: Make sure you have downloaded your cohorts using 
-# DownloadAssets.R and that those cohorts are stored in the "inst" folder
-# of the project. 
+# INSTRUCTIONS: Make sure you have downloaded your cohorts and concept sets 
+# using DownloadAssets.R and that those are stored in the "inst" folder of the
+# project. 
+#
+# IMPORTANT: You must call "renv::restore()" and follow the prompts to install
+# all of the necessary R libraries prior to creating the analysis 
+# specifications. Make sure to restart R after running "renv::restore()".
 # 
 # More information about Strategus HADES modules can be found at:
 # https://ohdsi.github.io/Strategus/reference/index.html#omop-cdm-hades-modules.
@@ -15,15 +19,11 @@ library(Strategus)
 # Above the line - MODIFY ------------------------------
 ########################################################
 
-# Get the list of cohorts - NOTE: you should modify this for your
-# study to retrieve the cohorts you downloaded as part of
-# DownloadAssets.R
 negativeControlOutcomeCohortSet <- CohortGenerator::readCsv("inst/negativeControlOutcomes.csv")
 excludedCovariateConcepts <- CohortGenerator::readCsv("inst/excludedCovariateConcepts.csv")
 cohortDefinitionSet <- readr::read_csv("inst/Cohorts.csv", show_col_types = FALSE)
 
 tcis <- list(
-  #standard analyses that would be performed during routine signal detection
   list(
     targetId = 19137, # New users of GPLT-1
     comparatorId = 19021, # New users of DPP-4
@@ -39,7 +39,7 @@ outcomes <- tibble(
   cohortId = c(19023, # Acute myocardial infarction inpatient setting
                19024, # Acute myocardial infarction any setting
                19059), # Diarrhea
-  cleanWindow = c(365,
+  cleanWindow = c(365, # Clean window: Number of days before a patient can have the outcome again
                   365,
                   365)
 )
@@ -75,7 +75,7 @@ studyEndDate <- "20231231"   #YYYYMMDD
 # Consider these settings for estimation  ----------------------------------------
 useCleanWindowForPriorOutcomeLookback <- FALSE # If FALSE, lookback window is all time prior, i.e., including only first events
 psMatchMaxRatio <- 1 # If bigger than 1, the outcome model will be conditioned on the matched set
-sccsMaxCasesPerOutcome <- 100000 
+sccsMaxCasesPerOutcome <- 100000 # Mostly used to limit computation for negative controls. 
 
 ########################################################
 # Below the line - DO NOT MODIFY -----------------------
@@ -671,6 +671,8 @@ plpModuleSpecifications <- plpModuleSettingsCreator$createModuleSpecifications(
 
 
 # Create the analysis specifications ------------------------------------------
+
+# To disable specific modules, just remove them here:
 analysisSpecifications <- Strategus::createEmptyAnalysisSpecificiations() |>
   Strategus::addSharedResources(cohortDefinitionShared) |> 
   Strategus::addSharedResources(negativeControlsShared) |>

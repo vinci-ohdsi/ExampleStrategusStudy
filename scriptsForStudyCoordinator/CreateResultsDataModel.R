@@ -3,10 +3,9 @@
 # database and permissions to create tables in an existing schema specified by 
 # the resultsDatabaseSchema parameter, or that you want to use a local SQLite
 # database.
-# 
-# More information about working with results produced by running Strategus 
-# is found at:
-# https://ohdsi.github.io/Strategus/articles/WorkingWithResults.html
+#
+# Make sure you have set the connection details to your results database in
+# scriptsForStudyCoordinator/SetConnectionDetails.R.
 # ##############################################################################
 
 # Settings ---------------------------------------------------------------------
