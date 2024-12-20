@@ -1,7 +1,7 @@
 Package: VaTools
 Type: Package
 Title: What the Package Does (Title Case)
-Version: 0.2.0
+Version: 0.2.1
 Author: Who wrote it
 Maintainer: The package maintainer <yourself@somewhere.net>
 Description: More about what it does (maybe more than one line)
@@ -14,13 +14,13 @@ RoxygenNote: 7.2.3
 RemoteType: github
 RemoteHost: api.github.com
 RemoteRepo: VaTools
-RemoteUsername: vinci-ohdsi
+RemoteUsername: suchard-group
 RemoteRef: HEAD
-RemoteSha: b9087a20d596060c91f93e2f44a707797f40f656
+RemoteSha: 1fcd21c1ffa3cb960c009564cae97c9633c4ce9b
 GithubRepo: VaTools
-GithubUsername: vinci-ohdsi
+GithubUsername: suchard-group
 GithubRef: HEAD
-GithubSHA1: b9087a20d596060c91f93e2f44a707797f40f656
+GithubSHA1: 1fcd21c1ffa3cb960c009564cae97c9633c4ce9b
 NeedsCompilation: no
-Packaged: 2024-12-18 17:53:42 UTC; viernes
-Built: R 4.4.1; ; 2024-12-18 17:53:44 UTC; windows
+Packaged: 2024-12-20 18:06:36 UTC; viernes
+Built: R 4.4.1; ; 2024-12-20 18:06:37 UTC; windows

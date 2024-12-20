@@ -685,6 +685,24 @@
       ],
       "Hash": "dec90bbadd38242db23691e35bca508d"
     },
+    "VaTools": {
+      "Package": "VaTools",
+      "Version": "0.2.1",
+      "Source": "GitHub",
+      "RemoteType": "github",
+      "RemoteHost": "api.github.com",
+      "RemoteRepo": "VaTools",
+      "RemoteUsername": "suchard-group",
+      "RemoteSha": "1fcd21c1ffa3cb960c009564cae97c9633c4ce9b",
+      "Requirements": [
+        "DatabaseConnector",
+        "R",
+        "SqlRender",
+        "dplyr",
+        "stringr"
+      ],
+      "Hash": "b25368b73ecea8c0650e9f33b80bfa94"
+    },
     "abind": {
       "Package": "abind",
       "Version": "1.4-8",
